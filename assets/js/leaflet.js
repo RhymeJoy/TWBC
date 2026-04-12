@@ -222,7 +222,7 @@ function initLeafletSection(sectionId) {
         zoomDelta: 0.5
     }).setView(initialCenter, initialZoom);
 
-    L.tileLayer("https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg", {
+    L.tileLayer("https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg?api_key=b2bf2bf9-ed0b-4ea8-893e-24dafb9f49fa", {
         attribution:'&copy; <a target="_blank" href="https://maps.stamen.com/">Stamen Design</a>',
         maxZoom: 20,
         maxNativeZoom: 19
