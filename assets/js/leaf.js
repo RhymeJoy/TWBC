@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!vineMenu) return;
 
     const menuItems = [
-        { href: "HomePage.html", className: "leaf-home", text: "首頁" },
+        { href: "index.html", className: "leaf-home", text: "首頁" },
         { href: "Ticket.html", className: "leaf-ticket", text: "門票" },
         { href: "News.html", className: "leaf-news", text: "最新消息" },
         { href: "About.html", className: "leaf-about", text: "關於我們" },
