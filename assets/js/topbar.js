@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // 回首頁
         homeBtn.addEventListener("click", () => {
-            window.location.href = "index.html";
+            window.location.href = "HomePage.html";
         });
 
         updateTopbarText();
