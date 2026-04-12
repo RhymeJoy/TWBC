@@ -3,7 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
         {
             id: "location",
             title: "活動地點",
-            description: "就怕你找不到我們辦在哪"
+            description: "就怕你找不到我們辦在哪",
+            extraHTML: `<h4>阿斯生活空間：新北市三重區三和路四段111號10樓 <a style="color: #a54500; text-decoration: none;" href="https://maps.app.goo.gl/Ndx7tYr8oszrk3A26" target="_blank">📍導航</a></h4>`
         },
         {
             id: "vendorsMap",
@@ -147,7 +148,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!page) return;
 
         paperTitle.textContent = page.title;
-        paperBody.innerHTML = getBookContent(page.id);
+        const extra = page.extraHTML || "";
+        paperBody.innerHTML = extra + getBookContent(page.id);
 
         renderTabs(page.id);
 
