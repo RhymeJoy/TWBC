@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
         copyBtn.addEventListener("click", copyCurrentLink);
 
         homeBtn.addEventListener("click", () => {
-            window.location.href = "HomePage.html";
+            window.location.href = "index.html";
         });
 
         updateTopbarText();
