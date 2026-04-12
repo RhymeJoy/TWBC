@@ -1,0 +1,329 @@
+/* =========================
+   🌿 主葉子
+   ========================= */
+.leaf-toggle {
+    position: fixed;
+    top: 4.25em;
+    left: 3.25em;
+    width: 4.5em;
+    height: auto;
+    cursor: pointer;
+    z-index: 1102;
+    filter: drop-shadow(0 0 12px rgba(124,255,178,0.7));
+    transform-origin: top left;
+    transition: transform .1s ease-out;
+}
+
+.leaf-toggle:hover {
+    transform: scale(1.05) rotate(-5deg);
+    transition: transform .2s ease-out;
+}
+
+.leaf-toggle:active {
+    transform: scale(0.95) rotate(20deg);
+}
+
+/* =========================
+   外層 UI
+   ========================= */
+.vine-menu {
+    position: fixed;
+    inset: 0 auto auto 0;
+    z-index: 1100;
+    opacity: 0.5;
+    transition: opacity .2s ease;
+    pointer-events: none; /* 整層預設不吃事件 */
+}
+
+.vine-menu:hover,
+.vine-menu.active {
+    opacity: 1;
+}
+
+/* ✅ 只有主葉子永遠可點 */
+.vine-menu .leaf-toggle {
+    pointer-events: auto;
+}
+
+/* =========================
+   裝飾圖
+   ========================= */
+.vine-img {
+    background-image: url(../img/vine.avif);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: top left;
+    width: 10em;
+    height: 10em;
+    transform: rotate(-50deg);
+    position: fixed;
+    top: 0;
+    left: 0.5em;
+    z-index: 1101;
+    opacity: 0.5;
+    transition: opacity .2s ease;
+    pointer-events: none;
+}
+
+.vine-img:hover,
+.vine-img.active {
+    opacity: 1;
+}
+
+/* =========================
+   🌿 藤蔓容器
+   ========================= */
+.vine {
+    position: fixed;
+    top: 6.5em;
+    left: 2.5em;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    opacity: 0;
+    pointer-events: none; /* 預設不能互動 */
+    z-index: 1101;
+    padding: 3em 0;
+    transition: opacity .5s ease-out;
+}
+
+/* ✅ 打開後才允許互動 */
+.vine.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* =========================
+   🌱 藤蔓線
+   ========================= */
+.vine::before {
+    content: "";
+    position: absolute;
+    left: 2em;
+    top: 8px;
+    width: 3px;
+    height: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(58, 255, 156, 1) 0%,
+        rgba(58, 255, 156, 0.8) 80%,
+        rgba(58, 255, 156, 0) 100%
+    );
+    border-radius: 10px;
+}
+
+.vine.open::before {
+    animation: vineGrow 0.6s ease forwards;
+}
+
+@keyframes vineGrow {
+    from { height: 0; }
+    to   { height: calc(100% - 16px); }
+}
+
+/* =========================
+   🍃 每片葉子
+   ========================= */
+.leaf {
+    position: relative;
+    display: block;
+    width: 7rem;
+    height: 3rem;
+    opacity: 0;
+    transform: translate(10px, -10px) scale(0.7);
+    transition: all .3s ease;
+    text-decoration: none;
+    pointer-events: none; /* 預設葉子本身也不能互動 */
+}
+
+/* ✅ 打開後葉子才可互動 */
+.vine.open .leaf {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.vine.open .leaf:nth-child(1) { transition-delay: 0.1s; }
+.vine.open .leaf:nth-child(2) { transition-delay: 0.2s; }
+.vine.open .leaf:nth-child(3) { transition-delay: 0.3s; }
+.vine.open .leaf:nth-child(4) { transition-delay: 0.4s; }
+.vine.open .leaf:nth-child(5) { transition-delay: 0.5s; }
+.vine.open .leaf:nth-child(6) { transition-delay: 0.6s; }
+
+/* =========================
+   🍃 葉子圖片
+   ========================= */
+.leaf img {
+    width: 105%;
+    height: 105%;
+    object-fit: contain;
+    display: block;
+    transition: transform .25s ease, filter .25s ease;
+    transform-origin: center center;
+}
+
+/* =========================
+   葉子字
+   ========================= */
+.leaf span {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1em;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow:
+        0 0 4px rgba(0,0,0,.8),
+        0 0 8px rgba(0,0,0,.6);
+    pointer-events: none;
+    transition: all .5s ease-in-out;
+}
+
+/* =========================
+   搖晃動畫
+   ========================= */
+@keyframes leafSwing {
+    0%   { transform: rotate(4deg); }
+    50%  { transform: rotate(-1deg); }
+    100% { transform: rotate(4deg); }
+}
+
+.vine.open .leaf img {
+    transform-origin: top left;
+    animation: leafSwing 3s infinite ease-in-out;
+}
+
+/* =========================
+   關閉動畫
+   ========================= */
+@keyframes vineShrink {
+    from { height: 100%; }
+    to   { height: 0; }
+}
+
+.vine.closing {
+    opacity: 1;
+    pointer-events: none;
+}
+
+.vine.closing::before {
+    animation: vineShrink 0.5s ease forwards;
+}
+
+.vine.closing .leaf {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.7);
+    pointer-events: none;
+}
+
+.vine.closing .leaf:nth-child(1) { transition-delay: 0.5s; }
+.vine.closing .leaf:nth-child(2) { transition-delay: 0.4s; }
+.vine.closing .leaf:nth-child(3) { transition-delay: 0.3s; }
+.vine.closing .leaf:nth-child(4) { transition-delay: 0.2s; }
+.vine.closing .leaf:nth-child(5) { transition-delay: 0.1s; }
+.vine.closing .leaf:nth-child(6) { transition-delay: 0s; }
+
+/* =========================
+   hover（只在開啟後有效）
+   ========================= */
+.vine.open .leaf:hover img {
+    transform: scale(1.08) rotate(-3deg);
+    filter: brightness(1.15);
+}
+
+/* active */
+.leaf.active img {
+    filter: drop-shadow(0 0 16px #ffffff);
+    transform: scale(1.12);
+}
+
+/* =========================
+   顏色
+   ========================= */
+.leaf-home   img { filter: drop-shadow(0 0 8px #61b7ff); }
+.leaf-ticket img { filter: drop-shadow(0 0 8px #6eff7a); }
+.leaf-news   img { filter: drop-shadow(0 0 8px #ff7bd1); }
+.leaf-about  img { filter: drop-shadow(0 0 8px #c68cff); }
+.leaf-event  img { filter: drop-shadow(0 0 8px #ffd36e); }
+.leaf-join   img { filter: drop-shadow(0 0 8px #ff9e6e); }
+
+/* =========================
+   模糊遮罩
+   - 只負責暗化 / 點擊
+   - 真正 blur 交給 .page-wrap.blur-active
+   ========================= */
+#blur {
+    position: fixed;
+    inset: 0;
+    backdrop-filter: none;
+    background: rgba(0,0,0,0);
+    pointer-events: none;
+    transition: background .25s ease-in-out;
+    z-index: 900;
+}
+
+#blur.active {
+    background: rgba(0, 0, 0, 0.25);
+    pointer-events: auto;
+}
+
+#blur::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+        circle 50em at 15% 25%,
+        rgba(100, 255, 180, 0.5),
+        transparent 50%
+    );
+    opacity: 0;
+    transition: .4s;
+}
+
+#blur.active::after {
+    opacity: 1;
+}
+
+/* =========================
+   主內容模糊
+   ========================= */
+    
+.page-wrap,
+.bg,
+.container {
+    transition: filter .3s ease, transform .3s ease;
+}
+
+.page-wrap.blur-active {
+    filter: blur(2.5px) brightness(0.66);
+}
+.bg.blur-active{    
+    filter: blur(5px) brightness(0.33);
+}
+.container.blur-active {
+    filter: blur(2.5px) brightness(0.66);
+}
+
+/* =========================
+   📱 手機
+   ========================= */
+@media (max-width: 750px) {
+    .vine {
+        left: 2.5em;
+    }
+
+    .leaf {
+        width: 6.5em;
+        height: 2.5em;
+    }
+
+    .leaf span {
+        font-size: 0.9em;
+    }
+
+    .vine::before {
+        left: 30px;
+    }
+}

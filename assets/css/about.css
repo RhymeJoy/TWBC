@@ -1,0 +1,538 @@
+html, body {
+    height: auto;
+    min-height: 100%;
+    margin: 0;
+    font-family: 'LXGW WenKai Mono TC', monospace;
+    transition: all .2s ease-out;
+}
+
+/* Background */
+.bg {
+    position: fixed;
+    top: -5vh;
+    left: 0;
+    width: 100vw;
+    height: 110vh;
+    z-index: -3;
+    background-image: url('../img/village.avif');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    will-change: transform;
+}
+
+/* 主內容，不再用 container 黑底 */
+.page-wrap {
+    width: min(92%, 1200px);
+    margin: 0 auto;
+    min-height: 100vh;
+    padding: 1.5em 0 2em;
+    position: relative;
+    z-index: 1;
+}
+
+/* 標題 */
+.page-wrap > h1 {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    font-size: 3em;
+    color: #fff;
+    margin: 0 0 0.75em 0;
+    text-align: center;
+}
+
+.page-wrap > h1::before,
+.page-wrap > h1::after {
+    content: "";
+    flex: 1;
+    height: 2px;
+    min-width: 0;
+}
+
+.page-wrap > h1::before {
+    background: linear-gradient(
+        to right,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.9) 30%,
+        rgba(255,255,255,1) 80%,
+        rgba(255,255,255,0) 100%
+    );
+}
+
+.page-wrap > h1::after {
+    background: linear-gradient(
+        to left,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.9) 30%,
+        rgba(255,255,255,1) 80%,
+        rgba(255,255,255,0) 100%
+    );
+}
+
+/* logo */
+.logo-container {
+    height: auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.logo {
+    padding: 0.5em 1.5em 1em 0;
+    width: 15%;
+    min-width: 12em;
+    height: auto;
+    object-fit: contain;
+    transition: all .2s ease-out;
+}
+
+/* 淡入淡出 */
+.board-view,
+.paper-view {
+    transition: opacity .4s ease, transform .4s ease;
+}
+
+.board-view.active,
+.paper-view.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.board-view.hidden,
+.paper-view.hidden {
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+}
+
+.board-view {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.paper-view {
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+    display: none;
+}
+
+/* 木板 */
+.wood-board {
+    width: min(100%, 72em);
+    max-width: 70em;
+    margin: 2em auto 0em auto;
+    padding: 3em 3em 2.5em 3em;
+    border-radius: 1.5em;
+    position: relative;
+    background:
+        linear-gradient(rgba(0,0,0,.12), rgba(0,0,0,.12)),
+        linear-gradient(180deg, #8e5e37 0%, #744724 45%, #5f361b 100%);
+    box-shadow:
+        inset 0 0 0 4px rgba(255,255,255,0.05),
+        0 10px 25px rgba(0,0,0,0.3);
+    box-sizing: border-box;
+}
+
+.wood-board::before,
+.wood-board::after {
+    content: "";
+    position: absolute;
+    top: 1.1em;
+    width: 1.1em;
+    height: 1.1em;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #dcdcdc, #787878);
+    box-shadow: 0 2px 5px rgba(0,0,0,.35);
+}
+
+.wood-board::before {
+    left: 1.25em;
+}
+
+.wood-board::after {
+    right: 1.25em;
+}
+
+.wood-board > h2 {
+    font-size: 2.25em;
+    color: #fff3d5;
+    text-align: center;
+    margin: 0 0 0.35em 0;
+}
+
+.wood-board > p {
+    font-size: 1.1em;
+    color: #f7ead0;
+    text-align: center;
+    margin: 0 0 2em 0;
+    line-height: 1.8em;
+}
+
+/* 小祈福紙 */
+.wish-paper-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(20em, 100%), 1fr));
+    gap: 2em;
+    align-items: stretch;
+}
+
+.wish-paper {
+    position: relative;
+    width: 100%;
+    min-height: 12em;
+    border: none;
+    border-radius: 0.9em;
+    cursor: pointer;
+    text-align: left;
+    padding: 1.4em 1.5em 1em 1.5em;
+    background: linear-gradient(180deg, #fffdf4 0%, #f4e8cb 100%);
+    color: #5d4326;
+    box-shadow:
+        0 8px 18px rgba(0,0,0,.18),
+        inset 0 0 0 1px rgba(120, 95, 50, .15);
+    transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+    box-sizing: border-box;
+}
+
+.wish-paper:hover {
+    transform: translateY(-4px) rotate(-1deg);
+    box-shadow:
+        0 14px 24px rgba(0,0,0,.22),
+        inset 0 0 0 1px rgba(120,95,50,.18);
+}
+
+.wish-paper::before {
+    content: "";
+    position: absolute;
+    top: -0.5em;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3.2em;
+    height: 1em;
+    border-radius: 0.3em;
+    background: rgba(233, 220, 176, 0.95);
+    box-shadow: 0 1px 4px rgba(0,0,0,.15);
+}
+
+.wish-paper-title {
+    display: block;
+    font-size: 1.75em;
+    font-weight: bold;
+    color: #6a4424;
+    margin-bottom: 0.65em;
+    text-align: center;
+    line-height: 1.3em;
+}
+
+.wish-paper-desc {
+    display: block;
+    font-size: 1.15em;
+    color: #5c5144;
+    line-height: 1.8em;
+    white-space: pre-line;
+    text-align: justify;
+}
+
+/* 大祈福紙 */
+.full-paper {
+    width: min(100%, 60em);
+    margin: 2em auto;
+    padding: 2.5em 5em 2em 5em;
+    border-radius: 1.25em;
+    position: relative;
+    background: linear-gradient(180deg, #fffdf7 0%, #f3e6c6 100%);
+    box-shadow:
+        0 15px 30px rgba(0,0,0,.25),
+        inset 0 0 0 1px rgba(127, 100, 50, .12);
+    box-sizing: border-box;
+}
+
+.full-paper::before {
+    content: "";
+    position: absolute;
+    top: -0.65em;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5.5em;
+    height: 1.3em;
+    border-radius: 0.4em;
+    background: rgba(236, 224, 179, 0.95);
+    box-shadow: 0 2px 6px rgba(0,0,0,.18);
+}
+
+.paper-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 -1em;
+    gap: calc(1.5em - 0.5em);
+}
+
+/* =========================
+   🎯 共用按鈕（整合版）
+   ========================= */
+.back-btn,
+.copy-btn,
+.home-btn {
+    border: none;
+    border-radius: 999px;
+    padding: 0.75em 1.4em;
+    font-size: 1em;
+    font-family: inherit;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(0,0,0,.2);
+    transition: all .18s ease;
+}
+
+/* 顏色 */
+.back-btn {
+    background: linear-gradient(180deg, #8e6a45, #6d4e31);
+}
+
+.copy-btn {
+    background: linear-gradient(180deg, #5a7aa3, #3d5f85);
+}
+
+.home-btn {
+    background: linear-gradient(180deg, #6c8f4a, #4f6b36);
+}
+
+/* hover */
+.back-btn:hover,
+.copy-btn:hover,
+.home-btn:hover {
+    transform: translateY(-2px);
+    opacity: .95;
+}
+
+/* active（按下）*/
+.back-btn:active,
+.copy-btn:active,
+.home-btn:active {
+    transform: translateY(1px) scale(0.97);
+    box-shadow: 0 3px 8px rgba(0,0,0,.25);
+}
+
+/* =========================
+   ✨ 複製成功 / 失敗
+   ========================= */
+
+/* 成功 */
+.copy-btn.success {
+    background: linear-gradient(180deg, #4caf50, #2e7d32);
+    box-shadow: 0 0 12px rgba(76,175,80,0.6);
+    animation: glow 0.6s ease;
+}
+
+@keyframes glow {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* 失敗 */
+.copy-btn.error {
+    background: linear-gradient(180deg, #e53935, #b71c1c);
+    box-shadow: 0 0 12px rgba(229,57,53,0.6);
+}
+
+/* 隱藏原始來源 */
+.section-source {
+    display: none;
+}
+
+/* 原始內容 */
+.block {
+    display: block;
+    width: 100%;
+}
+
+.center-img {
+    display: block;
+    margin: 1.25em auto 0.25em auto;
+    width: 100%;
+    max-width: 30em;
+    height: auto;
+    object-fit: contain;
+    transition: all .2s ease-out;
+}
+
+/* 大祈福紙內文 */
+#paperContent .section,
+#paperContent .block,
+#paperContent .signboard {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    background: transparent !important;
+    background-image: none !important;
+    color: #4d3b27 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+}
+
+#paperContent h2 {
+    font-size: 2.1em;
+    color: #5a3920 !important;
+    margin: 1em 0 0.8em 0;
+    text-align: center;
+}
+
+#paperContent h4 {
+    font-size: 1.2em;
+    color: #5d4326 !important;
+    margin: 1.1em 0 0.6em 0;
+    text-align: justify;
+}
+
+#paperContent h5 {
+    font-size: 1.05em;
+    color: #5d4326 !important;
+    margin: 0.9em 0;
+    line-height: 1.6em;
+    text-align: justify;
+}
+
+#paperContent p {
+    font-size: 1.15em;
+    color: #4d3b27 !important;
+    margin: 0 0 0.8em 0;
+    line-height: 1.9em;
+    text-align: justify;
+}
+
+#paperContent .block > a {
+    display: block;
+    width: fit-content;
+    margin: 1.5em auto 0;
+    text-align: center;
+    margin: 1.5em auto 0;
+    color: #5a3920 !important;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.25em;
+    background: rgba(120, 83, 47, 0.08);
+    padding: 0.75em 5em;
+    border-radius: 10em;
+    transition: all .2s ease-out;
+}
+
+#paperContent a:hover {
+    background: rgba(120, 83, 47, 0.16);
+}
+
+#paperContent .block p a {
+    color: #c74cc5 !important;
+    text-decoration: none;
+    transition: all .2s ease-out;
+}
+
+#paperContent .block p a:hover {
+    color: #ff00c8 !important;
+}
+
+#paperContent img {
+    display: block;
+    margin: 1.5em auto;
+    width: 100%;
+    max-width: 28em;
+    height: auto;
+    object-fit: contain;
+}
+
+#paperContent br {
+    display: block;
+    margin: 0.5em 0;
+    content: "";
+}
+
+/* 手機 */
+@media screen and (max-width: 800px) {
+    .page-wrap {
+        width: 94%;
+        padding: 1.1em 0 1.5em;
+    }
+
+    .page-wrap > h1 {
+        font-size: 2em;
+    }
+
+    .logo {
+        width: 40%;
+        max-width: 12em;
+        min-width: 9em;
+        padding: 0.5em 0.75em 0.8em 0;
+    }
+
+    .wood-board {
+        padding: 2em 3em 1.5em 3em;
+    }
+
+    .wood-board > h2 {
+        font-size: 1.7em;
+    }
+
+    .wood-board > p {
+        font-size: 1em;
+        margin-bottom: 1.4em;
+    }
+
+    .wish-paper-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5em;
+        width: 100%;
+        max-width: 20em;
+        margin: 0 auto;
+    }
+
+    .wish-paper {
+        min-height: auto;
+        padding: 1.2em 0.9em 0.9em;
+    }
+
+    .wish-paper-title {
+        font-size: 1.2em;
+    }
+
+    .wish-paper-desc {
+        font-size: 0.95em;
+        line-height: 1.7em;
+    }
+
+    .full-paper {
+        padding: 2em 3em 1.4em 3em;
+    }
+
+    #paperContent h2 {
+        font-size: 1.6em;
+    }
+
+    #paperContent h4 {
+        font-size: 1.05em;
+    }
+
+    #paperContent h5 {
+        font-size: 1em;
+    }
+
+    #paperContent p {
+        font-size: 1.05em;
+    }
+
+    .back-btn,
+    .copy-btn,
+    .home-btn {
+        border-radius: 999px;
+        padding: 0.75em 1.25em;
+        font-size: 1em;
+        box-shadow: 0 6px 14px rgba(0,0,0,.2);
+    }
+}

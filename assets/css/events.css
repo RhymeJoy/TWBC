@@ -1,0 +1,217 @@
+html {
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+    font-family: "LXGW WenKai Mono TC", monospace;
+    overflow-x: hidden;
+}
+
+/* 背景 */
+.bg {
+    position: fixed;
+    top: -5vh;
+    left: 0;
+    width: 100vw;
+    height: 110vh;
+    z-index: -1;
+    background: url("../img/village.avif") center / cover no-repeat;
+    pointer-events: none;
+}
+
+/* 白紙 */
+
+.bookstall-wrap {
+    width: 100%;
+    padding: 2em 0 3em;
+}
+
+.paper-sheet {
+    width: min(97.5%, 62em);
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 2em 2.25em 2.5em;
+    border-radius: 1.25em;
+    position: relative;
+    background: linear-gradient(180deg, #fffefbdd, #f5efe5dd);
+    box-shadow:
+        0 1em 2em rgba(0, 0, 0, 0.25),
+        inset 0 0 0 1px rgba(127, 100, 50, 0.12);
+}
+
+.paper-sheet::before {
+    content: "";
+    position: absolute;
+    top: -0.6em;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5em;
+    height: 1.5em;
+    border-radius: 0.4em;
+    background: rgba(236, 224, 179, 0.95);
+}
+
+/* Topbar */
+
+.paper-topbar-book {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75em;
+    margin-bottom: 1.4em;
+}
+
+.paper-topbar-main {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 0.75em;
+}
+
+.paper-topbar-tabs {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.75em;
+}
+
+.paper-tab-btn,
+.paper-action-btn {
+    border: none;
+    border-radius: 999em;
+    padding: 0.75em 1.25em;
+    font-size: 1em;
+    color: #fff;
+    cursor: pointer;
+    background: linear-gradient(180deg, #8e6a45, #6d4e31);
+    box-shadow: 0 0.375em 0.875em rgba(0, 0, 0, 0.2);
+    transition: transform 0.18s, background 0.18s, opacity 0.18s;
+}
+
+.paper-tab-btn:hover,
+.paper-action-btn:hover {
+    transform: translateY(-2px);
+}
+
+.paper-tab-btn:active,
+.paper-action-btn:active {
+    transform: scale(0.96);
+}
+
+.copy-btn.success {
+    background: linear-gradient(180deg, #52a36c, #3c7d50);
+}
+
+.copy-btn.error {
+    background: linear-gradient(180deg, #c96a6a, #9c4d4d);
+}
+
+.reset-btn {
+    background: linear-gradient(180deg, #5a8dee, #3c6ed0);
+}
+
+/* 內容 */
+
+.paper-inner h3 {
+    font-size: clamp(1.6rem, 2vw, 2rem);
+    color: #5a3920;
+    text-align: center;
+    margin-bottom: 0.5em;
+    word-break: break-word;
+}
+
+#paperBody {
+    font-size: 1.05em;
+    color: #4d3b27;
+    line-height: 1.9;
+}
+
+#paperBody p {
+    margin-bottom: 0.9em;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+#paperBody img,
+#paperBody iframe,
+#paperBody video,
+#paperBody canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Leaflet 地圖 */
+
+.leaflet-wrap {
+    width: 100%;
+    margin: 0 auto 1em;
+    padding: 0;
+}
+
+.leaflet-map,
+.leaflet-container {
+    width: 100% !important;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.leaflet-map {
+    height: 50em;
+    margin: 0 auto;
+    display: block;
+    border-radius: 1em;
+    overflow: hidden;
+}
+
+/* 手機 */
+
+@media (max-width: 600px) {
+    .paper-sheet {
+        width: min(96%, 62em);
+        padding: 1.6em 1.2em 2em;
+    }
+
+    .paper-tab-btn,
+    .paper-action-btn {
+        padding: 0.65em 1em;
+        font-size: 0.9em;
+    }
+
+    #paperBody {
+        font-size: 0.98em;
+    }
+
+    .leaflet-map {
+        height: 34em;
+    }
+}
+
+@media (max-width: 420px) {
+    .paper-sheet {
+        width: min(94%, 62em);
+        padding: 1.2em 0.85em 1.6em;
+    }
+
+    .paper-topbar-main {
+        justify-content: center;
+    }
+
+    .paper-tab-btn,
+    .paper-action-btn {
+        padding: 0.58em 0.85em;
+        font-size: 0.85em;
+    }
+
+    .leaflet-map {
+        height: 26em;
+    }
+}
