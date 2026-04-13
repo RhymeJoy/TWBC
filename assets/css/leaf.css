@@ -11,16 +11,16 @@
     z-index: 1102;
     filter: drop-shadow(0 0 12px rgba(124,255,178,0.7));
     transform-origin: top left;
-    transition: transform .1s ease-out;
+    transition: transform .2s ease, filter .2s ease;
 }
 
 .leaf-toggle:hover {
-    transform: scale(1.05) rotate(-5deg);
-    transition: transform .2s ease-out;
+    transform: scale(1.08) rotate(-6deg);
+    filter: drop-shadow(0 0 16px rgba(124,255,178,1));
 }
 
 .leaf-toggle:active {
-    transform: scale(0.95) rotate(20deg);
+    transform: scale(0.9) rotate(25deg);
 }
 
 /* =========================
@@ -32,7 +32,7 @@
     z-index: 1100;
     opacity: 0.5;
     transition: opacity .2s ease;
-    pointer-events: none; /* 整層預設不吃事件 */
+    pointer-events: none;
 }
 
 .vine-menu:hover,
@@ -40,7 +40,7 @@
     opacity: 1;
 }
 
-/* ✅ 只有主葉子永遠可點 */
+/* 主葉子永遠可點 */
 .vine-menu .leaf-toggle {
     pointer-events: auto;
 }
@@ -61,13 +61,22 @@
     left: 0.5em;
     z-index: 1101;
     opacity: 0.5;
-    transition: opacity .2s ease;
+    transition: opacity .2s ease, transform .35s ease;
     pointer-events: none;
 }
 
 .vine-img:hover,
 .vine-img.active {
     opacity: 1;
+}
+
+body.menu-open .vine-img {
+    animation: vineFloat 4s ease-in-out infinite;
+}
+
+@keyframes vineFloat {
+    0%, 100% { transform: rotate(-50deg) translateY(0); }
+    50%      { transform: rotate(-50deg) translateY(6px); }
 }
 
 /* =========================
@@ -81,13 +90,13 @@
     flex-direction: column;
     gap: 1em;
     opacity: 0;
-    pointer-events: none; /* 預設不能互動 */
+    pointer-events: none;
     z-index: 1101;
     padding: 3em 0;
     transition: opacity .5s ease-out;
 }
 
-/* ✅ 打開後才允許互動 */
+/* 打開後才允許互動 */
 .vine.open {
     opacity: 1;
     pointer-events: auto;
@@ -113,12 +122,18 @@
 }
 
 .vine.open::before {
-    animation: vineGrow 0.6s ease forwards;
+    animation: vineGrow 0.6s ease forwards,
+               vinePulse 2s ease-in-out infinite;
 }
 
 @keyframes vineGrow {
     from { height: 0; }
     to   { height: calc(100% - 16px); }
+}
+
+@keyframes vinePulse {
+    0%, 100% { filter: brightness(1); }
+    50%      { filter: brightness(1.3); }
 }
 
 /* =========================
@@ -131,24 +146,31 @@
     height: 3rem;
     opacity: 0;
     transform: translate(10px, -10px) scale(0.7);
-    transition: all .3s ease;
+    transition: opacity .3s ease, transform .3s ease;
     text-decoration: none;
-    pointer-events: none; /* 預設葉子本身也不能互動 */
+    pointer-events: none;
 }
 
-/* ✅ 打開後葉子才可互動 */
+/* 打開後葉子才可互動 */
 .vine.open .leaf {
     opacity: 1;
     transform: translateY(0) scale(1);
     pointer-events: auto;
+    animation: leafPop 0.5s cubic-bezier(.2,1.4,.4,1) both;
 }
 
-.vine.open .leaf:nth-child(1) { transition-delay: 0.1s; }
-.vine.open .leaf:nth-child(2) { transition-delay: 0.2s; }
-.vine.open .leaf:nth-child(3) { transition-delay: 0.3s; }
-.vine.open .leaf:nth-child(4) { transition-delay: 0.4s; }
-.vine.open .leaf:nth-child(5) { transition-delay: 0.5s; }
-.vine.open .leaf:nth-child(6) { transition-delay: 0.6s; }
+@keyframes leafPop {
+    0%   { transform: translate(10px, -10px) scale(0.7); }
+    60%  { transform: translateY(2px) scale(1.08); }
+    100% { transform: translateY(0) scale(1); }
+}
+
+.vine.open .leaf:nth-child(1) { transition-delay: 0.1s; animation-delay: 0.1s; }
+.vine.open .leaf:nth-child(2) { transition-delay: 0.2s; animation-delay: 0.2s; }
+.vine.open .leaf:nth-child(3) { transition-delay: 0.3s; animation-delay: 0.3s; }
+.vine.open .leaf:nth-child(4) { transition-delay: 0.4s; animation-delay: 0.4s; }
+.vine.open .leaf:nth-child(5) { transition-delay: 0.5s; animation-delay: 0.5s; }
+.vine.open .leaf:nth-child(6) { transition-delay: 0.6s; animation-delay: 0.6s; }
 
 /* =========================
    🍃 葉子圖片
@@ -184,15 +206,26 @@
 /* =========================
    搖晃動畫
    ========================= */
-@keyframes leafSwing {
-    0%   { transform: rotate(4deg); }
-    50%  { transform: rotate(-1deg); }
-    100% { transform: rotate(4deg); }
+.vine.open .leaf:nth-child(odd) img {
+    transform-origin: top left;
+    animation: leafSwingA 3.2s infinite ease-in-out;
 }
 
-.vine.open .leaf img {
+.vine.open .leaf:nth-child(even) img {
     transform-origin: top left;
-    animation: leafSwing 3s infinite ease-in-out;
+    animation: leafSwingB 2.7s infinite ease-in-out;
+}
+
+@keyframes leafSwingA {
+    0%   { transform: rotate(5deg); }
+    50%  { transform: rotate(-2deg); }
+    100% { transform: rotate(5deg); }
+}
+
+@keyframes leafSwingB {
+    0%   { transform: rotate(3deg); }
+    50%  { transform: rotate(-4deg); }
+    100% { transform: rotate(3deg); }
 }
 
 /* =========================
@@ -229,8 +262,8 @@
    hover（只在開啟後有效）
    ========================= */
 .vine.open .leaf:hover img {
-    transform: scale(1.08) rotate(-3deg);
-    filter: brightness(1.15);
+    transform: scale(1.1) rotate(-4deg);
+    filter: brightness(1.25) drop-shadow(0 0 12px rgba(255,255,255,0.6));
 }
 
 /* active */
@@ -242,30 +275,33 @@
 /* =========================
    顏色
    ========================= */
-.leaf-home   img { filter: drop-shadow(0 0 8px #61b7ff); }
+.leaf-home img   { filter: drop-shadow(0 0 8px #61b7ff); }
 .leaf-ticket img { filter: drop-shadow(0 0 8px #6eff7a); }
-.leaf-news   img { filter: drop-shadow(0 0 8px #ff7bd1); }
-.leaf-about  img { filter: drop-shadow(0 0 8px #c68cff); }
-.leaf-event  img { filter: drop-shadow(0 0 8px #ffd36e); }
-.leaf-join   img { filter: drop-shadow(0 0 8px #ff9e6e); }
+.leaf-news img   { filter: drop-shadow(0 0 8px #ff7bd1); }
+.leaf-about img  { filter: drop-shadow(0 0 8px #c68cff); }
+.leaf-event img  { filter: drop-shadow(0 0 8px #ffd36e); }
+.leaf-join img   { filter: drop-shadow(0 0 8px #ff9e6e); }
 
 /* =========================
    模糊遮罩
    - 只負責暗化 / 點擊
-   - 真正 blur 交給 .page-wrap.blur-active
+   - 真正 blur 交給 .blur-active
    ========================= */
 #blur {
     position: fixed;
     inset: 0;
-    backdrop-filter: none;
-    background: rgba(0,0,0,0);
+    background: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(0px);
     pointer-events: none;
-    transition: background .25s ease-in-out;
+    transition:
+        background .35s ease,
+        backdrop-filter .35s ease;
     z-index: 900;
 }
 
 #blur.active {
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(0, 0, 0, 0.28);
+    backdrop-filter: blur(2px);
     pointer-events: auto;
 }
 
@@ -274,12 +310,12 @@
     position: absolute;
     inset: 0;
     background: radial-gradient(
-        circle 50em at 15% 25%,
-        rgba(100, 255, 180, 0.5),
-        transparent 50%
+        circle 40em at 15% 20%,
+        rgba(120, 255, 180, 0.55),
+        transparent 60%
     );
     opacity: 0;
-    transition: .4s;
+    transition: opacity .4s ease;
 }
 
 #blur.active::after {
@@ -288,22 +324,47 @@
 
 /* =========================
    主內容模糊
+   - 配合新版 JS 的全域 .blur-active
    ========================= */
-    
 .page-wrap,
 .bg,
-.container {
-    transition: filter .3s ease, transform .3s ease;
+.container,
+.bookstall-wrap,
+.paper-view-book,
+.paper-sheet {
+    transition:
+        filter .35s ease,
+        transform .35s ease,
+        opacity .35s ease;
+    will-change: filter, transform;
 }
 
-.page-wrap.blur-active {
-    filter: blur(2.5px) brightness(0.66);
+/* 全域基礎模糊 */
+.blur-active {
+    filter: blur(3px) brightness(0.7);
+    transform: scale(0.985);
 }
-.bg.blur-active{    
-    filter: blur(5px) brightness(0.33);
+
+/* 背景加重，做景深 */
+.bg.blur-active {
+    filter: blur(6px) brightness(0.3);
 }
-.container.blur-active {
-    filter: blur(2.5px) brightness(0.66);
+
+/* 主要內容微調，避免太糊 */
+.bookstall-wrap.blur-active,
+.paper-view-book.blur-active,
+.paper-sheet.blur-active {
+    filter: blur(2.5px) brightness(0.75);
+}
+
+/* 選單開啟時整體往後退一點 */
+body.menu-open > *:not(.noblur):not(#blur) {
+    transform: scale(0.985);
+}
+
+/* 地圖避免 transform 造成抖動 */
+#eventMap {
+    transform: none !important;
 }
 
 /* =========================
@@ -325,5 +386,17 @@
 
     .vine::before {
         left: 30px;
+    }
+
+    .leaf-toggle {
+        top: 3.8em;
+        left: 2.2em;
+        width: 4em;
+    }
+
+    .vine-img {
+        width: 8.5em;
+        height: 8.5em;
+        left: 0.2em;
     }
 }

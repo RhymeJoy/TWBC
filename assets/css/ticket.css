@@ -1,5 +1,6 @@
 html, body {
     height: auto;
+    background-color: black;
 }
 
 /* Background */
@@ -116,6 +117,13 @@ h2 {
 }
 
 /* button */
+.btn {
+    display: flex;
+    margin: 0 25%;
+    gap: 15%;
+    transition: all .2s ease-out;
+}
+
 .sectionbtn {
     display: block;
     margin: 0 auto;
@@ -363,11 +371,18 @@ h2 {
     .compare-wrap {
         padding: 0.5em;
     }
-    .compare-table td {
-    padding: 0.4em 0.2em;
-    font-size: 1rem;
-    font-weight: 500;
-}
+    .compare-table td {         
+        padding: 0.4em 0.2em;
+        font-size: 1rem;
+        font-weight: 500;
+    }
+    .sectionbtn {
+        padding: 0.6em 1.2em;
+    }
+    .btn {
+        margin: 0 5%;
+        gap: 5%;
+    }
 }
 
 @media screen and (min-width: 1300px) and (max-width: 2000px) { 

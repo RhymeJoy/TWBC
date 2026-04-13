@@ -1,276 +1,255 @@
-/* body */
-
-html {
+/* General Reset */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%; /* Ensure the body takes full height */
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
     background-color: #ffffff;
     z-index: -2;
 }
-body {
-    margin: 0;
-    padding: 0;
-}
+
+/* Background */
 .bg {
-    height: 100vh;
+    position: fixed;
+    top: 0;           /* 改回 0，讓程式計算百分比 */
+    left: 0;
+    width: 100vw;
+    height: 100vh;    /* 容器佔滿螢幕 */
+    z-index: -1;
+
     background-image: url('../img/homepage.avif');
-    background-size: cover;
-    background-position: 33.33% 50%;
+    background-size: auto 160%; /* 寬度填滿，高度會超出容器(因為圖片是1800px) */
+    background-position: center bottom; /* 初始切齊頂部 */
     background-repeat: no-repeat;
 
+    pointer-events: none;
+    /* 移除 will-change: transform，改用背景定位效能也很好 */
 }
+
+.bg2 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    background-image: url('../img/foreground.avif');
+    background-size: auto 200%;
+    background-position: center top; /* 初始切齊頂部 */
+    background-repeat: no-repeat;
+    pointer-events: none;
+    /* transform: scale(1.25);  <- 建議先移除 scale，靠 background-position 控制 */
+}
+
 .title {
     font-family: 'LXGW WenKai Mono TC', monospace;
-    font-size: 5em;
+    font-size: 4.25em;
     color: #fff;
     text-shadow:    0 0 5px #fff,
                     0 0 10px #ff00de,
                     0 0 20px #ff00de;
-
-    position: absolute;
-    top: 45%;
-    left: 50%;
-
-    transform: translate(-50%, -50%);  /* 👈 加回X */
+    position: relative;
     text-align: center;
+    transform: translateX(20%);
     transition: all .25s ease-out;
 }
 .subtitle {
     font-family: 'LXGW WenKai Mono TC', monospace;
     margin-top: .5em;
-    font-size: .35em;
+    font-size: .75em;
 }
+
+/* Countdown */
 .countdown {
     font-family: 'LXGW WenKai Mono TC', monospace;
-    font-size: .5em;
+    font-size: .75em;
     display: flex;
     justify-content: center;
-    gap: 12px;
+    gap: 0.5em;
     white-space: nowrap;
-    margin-top: 1.5em;
-    margin-bottom: 1em;
+    margin: 1.5em 0 2em 0;
 }
 .countdown span {
     min-width: 2ch;
     text-align: center;
 }
-.button{
+
+.countdown-message {
     display: inline-block;
-    font-size: .5em;
-    color: #fff;
-    text-shadow: none !important;
-    border-radius: 1em;
+    text-align: center;
+}
+
+/* Container for Blocks */
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align items to the top */
+    align-items: center;
+    gap: 7.5em;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 12.5em;
+    margin-top: 10em;
+    transform: translateX(-10%);
+    transition: all 0.25s ease-out;
+}
+
+.block {
+    width: 20em;
+    height: 10em;
     background-color: #d145b3b1;
     border: .1em solid #b9d7fab1;
-    padding: .1em 2.4em;
-    box-shadow: 0 0 10px #34012984;
-    text-decoration: none !important;
-    transition: all .25s ease-out;
+    border-radius: 5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px #34012984;
+    transition: all 0.2s ease-out;
 }
-.button:hover {
+.block:hover {
     background-color: #e85ad0;
     border: .1em solid #b9d7fa;
     box-shadow: 0 0 20px #39013269;
     transform: scale(1.05);
 }
-.button:active {
+.block:active {
     transform: scale(0.95);
+    transition: all 0.1s ease-out;
 }
 
-/* menu */
-.menu-btn {
-    position: fixed;
-    top: 1em;
-    left: 1em;
-    width: 2.2em;
-    height: 2.2em;
-    padding: 0;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    z-index: 1000;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 0.4em;
+.block .description {
+    font-family: 'LXGW WenKai Mono TC', monospace;
+    font-size: 3em;
+    padding: .25em .5em;
+    color: #ffffff;
+    text-align: center;
+    transition: all 0.25s ease-out;
 }
-
-.menu-btn span {
-    display: block;
-    width: 100%;
-    height: 0.18em;
-    background-color: #fff;
-    border-radius: 999px;
-    transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease;
-    box-shadow: 0 0 8px rgba(255, 0, 222, 0.5);
-    transform-origin: center;
-}
-
-.menu-btn:hover span {
-    background-color: #ff66e0;
-}
-
-.menu-btn.open span:nth-child(1) {
-    transform: translateY(0.58em) rotate(45deg);
-}
-
-.menu-btn.open span:nth-child(2) {
-    transform: scaleX(0);
-}
-
-.menu-btn.open span:nth-child(3) {
-    transform: translateY(-0.58em) rotate(-45deg);
-}
-
-.sidebar {
-    position: fixed;
-    top: 0;
-    left: -250px;
-    width: 250px;
-    height: 100%;
-    box-sizing: border-box;
-    background-color: rgba(97, 97, 97, 0.9);
-    transition: left 0.3s ease;
-    z-index: 999;
-
-    display: flex;
-    flex-direction: column;
-    padding: 5em 2em 2em;
-}
-.sidebar.active {
-    left: 0;
-}
-
-.sidebar a {
-    color: #fff;
-    text-decoration: none;
-    font-size: 1.25em;
-    margin-bottom: 1.5em;
-    transition: color 0.3s ease;
-}
-.sidebar a:hover {
-    color: #ff66e0;
-}
-
-.cr {
-    position: absolute;
-    font-size: 1rem;
-    bottom: 1em;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #ccc;
-    white-space: nowrap;
-    padding: .25em  .5em;
-}
-
-.overlay {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 85%;
-    background: linear-gradient(
-        to top,
-        rgba(0,0,0,.7),
-        rgba(0,0,0,0.3) 50%,
-        rgba(0,0,0,0)
-    );
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(100%);
-    pointer-events: none;
-
-    transition:
-        transform 0.4s ease,
-        opacity 0.3s ease,
-        visibility 0s linear 0.4s;
-
-    z-index: 998;
-}
-.overlay.active {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    pointer-events: auto;
-
-    transition:
-        transform 0.4s ease 0.12s,
-        opacity 0.3s ease 0.12s,
-        visibility 0s linear 0s;
-}
-
 
 /* Quotes */
-
 .Quotes {
-    font-family: 'LXGW WenKai Mono TC', monospace;
-    position: absolute;
-    bottom: .25em;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 1.25em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: static;
+    margin: 0 1em;
+    font-size: 1.2em;
     color: #c9eaeb;
-    margin-bottom: .2em;
     transition: all 0.25s ease-out;
 }
 .Quotes p {
+    margin: 0;
+    width: 100%;
+    text-align: center;
     transition: opacity 0.5s ease, transform 0.5s ease;
 }
-
 .fade-out {
     opacity: 0;
     transform: translateY(10px);
 }
-
 .fade-in {
     opacity: 1;
     transform: translateY(0);
 }
 
+.cr {
+    flex: 1;
+    text-align: left;
+    color: #c9eaeb;
+    font-family: 'LXGW WenKai Mono TC', monospace;
+    white-space: nowrap;
+    font-size: 1.1em;
+}
+
 /* footer */
+.overlay {
+    margin-top: 2em;
+    background: linear-gradient(
+        to top,
+        rgba(0,0,0,.75) 0%,
+        rgba(0,0,0,0.5) 50%,
+        rgba(0,0,0,0) 100%
+    );
+    min-height: 10em;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
 
 footer {
-    position: absolute;
-    bottom: 0;
     width: 100%;
-    transition: all 0.25s ease-out;
-    z-index: 1010;
-    opacity: 0;
+    display: flex;
+    align-items: flex-end;
 }
-footer.active {
-    opacity: 1;
-    transition-delay: .5s;
+
+.footer {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    align-items: center;
+    padding: 0em 1em;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: .5em;
 }
 
 .footer-links {
-    
+    flex: 1;
     display: flex;
     justify-content: flex-end;
-    gap: 20px;
-    padding: 1em 2em;
+    gap: 1.5em;
 }
 .footer-links a {
     color: #7ff2f6;
-    font-size: 1.5em;
+    font-size: 1.75em;
     transition: all 0.3s ease;
 }
 .footer-links a:hover {
     color: #c71b1b;
 }
 
+
 @media screen and (max-width: 800px) {
+    .Quotes {
+        font-size: 1.15em;
+        transition: all 1s ease-out;
+    }
     .title {
-        font-size: 3.5em;
+        font-size: 2.3em;
+        transform: translateX(0%);
+    }
+    .subtitle {
+        font-size: 0.7em;
     }
     .footer-links a {
-    font-size: 1.25em;
+        font-size: 1.25em;
     }
     .footer-links {
-    gap: 10px;
-    padding: .5em .75em;
+        gap: 1em;
+        margin-right: 0em;
+        padding: 0.5em 0;
     }
-}
-
-@media screen and (max-width: 1000px) {
-    .Quotes {
-        opacity: 0;
+    .container {
+        gap: 3em;
+        margin-top:14em;
+        margin-bottom: 7.5em;
+        transform: translateX(0%);
+    }
+    .block {
+        width: 14em;
+        height: 6em;
+    }
+    .block .description {
+        font-size: 1.75em;
+    }
+    .countdown {
+        font-size: .75em;
+        margin: 1.5em 0 7em 0;
+    }
+    .cr {
+        font-size: 0.9em;
     }
 }
