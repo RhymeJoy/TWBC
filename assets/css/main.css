@@ -6,8 +6,10 @@ html, body {
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    background-color: #ffffff;
     z-index: -2;
+}
+html {
+    background-color: white;
 }
 
 /* Background */

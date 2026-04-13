@@ -4,6 +4,8 @@ html, body {
     margin: 0;
     font-family: 'LXGW WenKai Mono TC', monospace;
     transition: all .2s ease-out;
+}
+html {
     background-color: black;
 }
 
