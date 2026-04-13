@@ -29,3 +29,9 @@ function update() {
         section1.classList.remove('show');
     }
 }
+
+const purchaseBtn = document.getElementById('purchase');
+
+purchaseBtn.addEventListener('click', () => {
+    window.open("https://docs.google.com/forms/d/e/1FAIpQLScQfsnO2xAn2_6HeFo4kghgGDsYjoyk57KowrEsRyrBtYE0LQ/viewform", "_blank");
+});

@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const vineMenu = document.querySelector(".vine-menu");
     const vineImg = document.querySelector(".vine-img");
     const blur = document.getElementById("blur");
-    const blurTargets = document.querySelectorAll(".page-wrap, .container, .bg");
 
     if (!vineMenu) return;
 
@@ -19,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     toggle.src = "assets/img/leafbtn.avif";
     toggle.className = "leaf-toggle";
     toggle.id = "leafToggle";
+    toggle.alt = "開啟選單";
 
     const vine = document.createElement("div");
     vine.className = "vine";
@@ -40,10 +40,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let isOpen = false;
 
+    /**
+     * 判斷某元素是否不應該被模糊
+     * 只要自己是 .noblur，或祖先有 .noblur，都排除
+     */
+    const isNoBlurElement = (el) => {
+        return !!el.closest(".noblur");
+    };
+
+    /**
+     * 取得 body 直層中所有需要模糊的元素
+     */
+    const getBlurTargets = () => {
+        return [...document.body.children].filter(el => {
+            if (el === blur) return false;              // 遮罩本身不模糊
+            if (isNoBlurElement(el)) return false;     // 有 noblur 的元素不模糊
+            return true;
+        });
+    };
+
     const setBlurState = (enabled) => {
+        const blurTargets = getBlurTargets();
+
         blurTargets.forEach(el => {
             el.classList.toggle("blur-active", enabled);
         });
+
+        document.body.classList.toggle("menu-open", enabled);
+
+        if (blur) {
+            blur.classList.toggle("active", enabled);
+        }
     };
 
     const openMenu = () => {
@@ -54,10 +81,8 @@ document.addEventListener("DOMContentLoaded", () => {
         vineMenu.classList.add("active");
 
         if (vineImg) vineImg.classList.add("active");
-        if (blur) blur.classList.add("active");
 
         setBlurState(true);
-
         isOpen = true;
     };
 
@@ -70,23 +95,35 @@ document.addEventListener("DOMContentLoaded", () => {
         vineMenu.classList.remove("active");
 
         if (vineImg) vineImg.classList.remove("active");
-        if (blur) blur.classList.remove("active");
 
         setBlurState(false);
-
         isOpen = false;
     };
 
-    toggle.addEventListener("click", (e) => {
+    const toggleMenu = (e) => {
         e.stopPropagation();
         isOpen ? closeMenu() : openMenu();
-    });
+    };
+
+    toggle.addEventListener("click", toggleMenu);
 
     if (blur) {
         blur.addEventListener("click", () => {
             if (isOpen) closeMenu();
         });
     }
+
+    document.addEventListener("click", (e) => {
+        if (!isOpen) return;
+        if (e.target.closest(".noblur")) return;
+        closeMenu();
+    });
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && isOpen) {
+            closeMenu();
+        }
+    });
 
     vine.addEventListener("animationend", () => {
         if (!isOpen) {
