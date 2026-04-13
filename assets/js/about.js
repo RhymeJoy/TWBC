@@ -87,7 +87,7 @@ function renderWishPapers(data) {
    ========================= */
 function openPaper(sectionId, updateHistory = true, instant = false) {
     const targetSection = document.querySelector(`.section-source .section#${sectionId}`);
-    if (!targetSection || !paperContent) return;
+    if (!targetSection || !paperContent || !boardView || !paperView) return;
 
     paperContent.innerHTML = targetSection.innerHTML;
 
@@ -97,7 +97,10 @@ function openPaper(sectionId, updateHistory = true, instant = false) {
 
     if (instant) {
         boardView.style.display = "none";
+        boardView.classList.remove("active", "hidden");
+
         paperView.style.display = "block";
+        paperView.classList.remove("hidden");
         paperView.classList.add("active");
         return;
     }
@@ -122,11 +125,16 @@ function openPaper(sectionId, updateHistory = true, instant = false) {
    🔙 回祈福板（給 topbar 用）
    ========================= */
 function backToBoard(updateHistory = true, instant = false) {
+    if (!boardView || !paperView) return;
+
     if (updateHistory) updateURL("");
 
     if (instant) {
         paperView.style.display = "none";
+        paperView.classList.remove("active", "hidden");
+
         boardView.style.display = "block";
+        boardView.classList.remove("hidden");
         boardView.classList.add("active");
         return;
     }
