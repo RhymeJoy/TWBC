@@ -19,13 +19,14 @@ const papersData = [
 ];
 
 const container = document.querySelector(".paper-container");
+const board = document.querySelector(".board");
 
 if (container) {
     renderPapers(papersData);
 }
 
 function renderPapers(data) {
-    const placed = [];
+    container.innerHTML = "";
 
     data.forEach((item) => {
         const paper = document.createElement("div");
@@ -39,13 +40,6 @@ function renderPapers(data) {
                 </div>
             </div>
         `;
-
-        container.appendChild(paper);
-
-        const pos = getSafePosition(placed, paper, container);
-
-        paper.style.left = `${pos.x}px`;
-        paper.style.top = `${pos.y}px`;
 
         const baseRotate = randomBetween(-8, 8);
         const floatRotate = randomBetween(1.5, 3.5);
@@ -67,6 +61,24 @@ function renderPapers(data) {
             });
         }
 
+        container.appendChild(paper);
+    });
+
+    requestAnimationFrame(() => {
+        layoutPapers();
+    });
+}
+
+function layoutPapers() {
+    const papers = [...container.querySelectorAll(".paper")];
+    const placed = [];
+
+    papers.forEach((paper) => {
+        const pos = getSafePosition(placed, paper, container);
+
+        paper.style.left = `${pos.x}px`;
+        paper.style.top = `${pos.y}px`;
+
         placed.push({
             x: pos.x,
             y: pos.y,
@@ -76,9 +88,6 @@ function renderPapers(data) {
     });
 }
 
-/**
- * 用實際紙張大小找安全位置
- */
 function getSafePosition(placed, paper, container) {
     const containerRect = container.getBoundingClientRect();
     const paperRect = paper.getBoundingClientRect();
@@ -86,14 +95,23 @@ function getSafePosition(placed, paper, container) {
     const paperWidth = paperRect.width;
     const paperHeight = paperRect.height;
 
-    const gap = 30;       // 紙和紙之間的安全距離
-    const edgeGap = 20;   // 離木板邊緣的距離
-    const maxTries = 200;
+    const gap = Math.max(12, Math.min(30, containerRect.width * 0.02));
+    const edgeGap = Math.max(10, Math.min(20, containerRect.width * 0.02));
+    const maxTries = 300;
 
     const minX = edgeGap + paperWidth / 2;
     const maxX = containerRect.width - edgeGap - paperWidth / 2;
     const minY = edgeGap + paperHeight / 2;
     const maxY = containerRect.height - edgeGap - paperHeight / 2;
+
+    if (minX > maxX || minY > maxY) {
+        return {
+            x: containerRect.width / 2,
+            y: containerRect.height / 2,
+            width: paperWidth,
+            height: paperHeight
+        };
+    }
 
     for (let i = 0; i < maxTries; i++) {
         const x = randomBetween(minX, maxX);
@@ -121,11 +139,10 @@ function getSafePosition(placed, paper, container) {
         }
     }
 
-    // 找不到就不要塞中間，改成找一個最不擠的位置
     let bestPoint = null;
     let bestScore = -Infinity;
 
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 150; i++) {
         const x = randomBetween(minX, maxX);
         const y = randomBetween(minY, maxY);
 
@@ -163,4 +180,21 @@ function escapeHtml(text) {
     const div = document.createElement("div");
     div.textContent = text;
     return div.innerHTML;
+}
+
+let resizeTimer;
+
+window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+        layoutPapers();
+    }, 120);
+});
+
+if (board) {
+    const observer = new ResizeObserver(() => {
+        layoutPapers();
+    });
+
+    observer.observe(board);
 }
