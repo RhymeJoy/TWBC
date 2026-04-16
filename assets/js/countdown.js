@@ -28,11 +28,13 @@ function getNow() {
 
 function renderMessage(text) {
     const countdown = document.getElementById('countdown');
+    if (!countdown) return;
     countdown.innerHTML = `<span class="countdown-message">${text}</span>`;
 }
 
 function renderCountdown(days, hours, minutes, seconds) {
     const countdown = document.getElementById('countdown');
+    if (!countdown) return;
     countdown.innerHTML = `
         <span id="days">${days}</span> 天
         <span id="hours">${hours}</span> 時
@@ -67,6 +69,10 @@ function updateCountdown() {
 async function initCountdown() {
     await syncTime();
     updateCountdown();
+
+    // 第一次畫面真的出來後，再通知 loader 可以關掉
+    document.dispatchEvent(new Event("pageReady"));
+
     setInterval(updateCountdown, 1000);
 }
 

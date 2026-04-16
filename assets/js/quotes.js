@@ -13,10 +13,11 @@ const quotes = [
     "「誠實，才是最重要、最好的原則。」- Applejack",
     "「善良比任何力量都強大。」- Fluttershy",
     "「友情不總是簡單，但值得去守護。」- Twilight Sparkle",
-    "「派對是交朋友最棒的方法！」- Pinkie Pie",
+    "「派對是交朋友最棒的方法！」- Pinkie Pie"
 ];
 
-// 用來記錄還沒用過的句子
+const QUOTE_HIDE_WIDTH = 900;
+
 let remainingQuotes = [...quotes];
 let quoteInterval = null;
 
@@ -28,18 +29,79 @@ function getRandomQuote() {
     const index = Math.floor(Math.random() * remainingQuotes.length);
     const quote = remainingQuotes[index];
     remainingQuotes.splice(index, 1);
-
     return quote;
+}
+
+function fitQuoteSingleLine(el, options = {}) {
+    if (!el) return;
+
+    const parent = el.parentElement;
+    if (!parent) return;
+
+    const {
+        stepEm = 0.125,
+        safetyPadding = 2
+    } = options;
+
+    // 先回到 CSS 預設值
+    el.style.fontSize = "";
+    el.style.whiteSpace = "nowrap";
+    el.style.display = "block";
+    el.style.overflow = "hidden";
+    el.style.textOverflow = "clip";
+
+    const parentWidth = parent.getBoundingClientRect().width;
+    const availableWidth = parentWidth - safetyPadding;
+
+    // 如果寬度還沒算出來，就不要縮
+    if (availableWidth <= 0) return;
+
+    const initialPx = parseFloat(window.getComputedStyle(el).fontSize);
+    const rootPx = parseFloat(window.getComputedStyle(document.documentElement).fontSize);
+    const stepPx = stepEm * rootPx;
+
+    let currentPx = initialPx;
+    let lastGoodPx = initialPx;
+
+    // 原本就放得下，直接保持 CSS 大小
+    if (Math.ceil(el.scrollWidth) <= Math.floor(availableWidth)) {
+        return;
+    }
+
+    // 每次往下縮，直到剛好放得下
+    while (currentPx > stepPx) {
+        currentPx -= stepPx;
+        el.style.fontSize = `${currentPx}px`;
+
+        if (Math.ceil(el.scrollWidth) <= Math.floor(availableWidth)) {
+            lastGoodPx = currentPx;
+            break;
+        }
+    }
+
+    el.style.fontSize = `${lastGoodPx}px`;
+}
+
+function applyQuoteFit() {
+    const el = document.getElementById("quoteText");
+    if (!el || !el.textContent.trim()) return;
+
+    fitQuoteSingleLine(el, {
+        stepEm: 0.125,
+        safetyPadding: 2
+    });
 }
 
 function updateQuote() {
     const el = document.getElementById("quoteText");
     if (!el) return;
 
-    // 小於 900px 時直接清空字串
-    if (window.innerWidth < 900) {
+    if (window.innerWidth < QUOTE_HIDE_WIDTH) {
         el.textContent = "";
         el.classList.remove("fade-in", "fade-out");
+        el.style.fontSize = "";
+        el.style.opacity = "";
+        el.style.transform = "";
         return;
     }
 
@@ -47,9 +109,24 @@ function updateQuote() {
     el.classList.add("fade-out");
 
     setTimeout(() => {
-        el.textContent = getRandomQuote();
-        el.classList.remove("fade-out");
-        el.classList.add("fade-in");
+        const nextQuote = getRandomQuote();
+
+        el.classList.remove("fade-in", "fade-out");
+        el.style.opacity = "0";
+        el.style.transform = "translateY(10px)";
+        el.style.fontSize = "";
+        el.textContent = nextQuote;
+
+        requestAnimationFrame(() => {
+            fitQuoteSingleLine(el, {
+                stepEm: 0.125,
+                safetyPadding: 2
+            });
+
+            el.style.opacity = "";
+            el.style.transform = "";
+            el.classList.add("fade-in");
+        });
     }, 300);
 }
 
@@ -57,9 +134,7 @@ function startQuoteRotation() {
     if (quoteInterval) return;
 
     updateQuote();
-    quoteInterval = setInterval(() => {
-        updateQuote();
-    }, 10000);
+    quoteInterval = setInterval(updateQuote, 10000);
 }
 
 function stopQuoteRotation() {
@@ -72,44 +147,33 @@ function stopQuoteRotation() {
     if (el) {
         el.textContent = "";
         el.classList.remove("fade-in", "fade-out");
+        el.style.fontSize = "";
+        el.style.opacity = "";
+        el.style.transform = "";
     }
 }
 
-// Lazy loading for Quotes section
-const quotesSection = document.querySelector(".Quotes");
+function handleResize() {
+    const el = document.getElementById("quoteText");
 
-if (quotesSection) {
-    if ("IntersectionObserver" in window) {
-        const observer = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    if (window.innerWidth < 900) {
-                        stopQuoteRotation();
-                    } else {
-                        startQuoteRotation();
-                    }
-
-                    observer.unobserve(entry.target);
-                }
-            });
-        });
-
-        observer.observe(quotesSection);
-    } else {
-        if (window.innerWidth < 900) {
-            stopQuoteRotation();
-        } else {
-            startQuoteRotation();
-        }
-    }
-}
-
-// 視窗尺寸改變時重新判斷
-window.addEventListener("resize", () => {
-    if (window.innerWidth < 900) {
+    if (window.innerWidth < QUOTE_HIDE_WIDTH) {
         stopQuoteRotation();
-    } else {
+        return;
+    }
+
+    if (!quoteInterval) {
         startQuoteRotation();
+    } else if (el && el.textContent.trim()) {
+        requestAnimationFrame(() => {
+            applyQuoteFit();
+        });
+    } else {
         updateQuote();
     }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("quotes init", window.innerWidth);
+    startQuoteRotation();
+    window.addEventListener("resize", handleResize);
 });

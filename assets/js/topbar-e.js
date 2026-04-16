@@ -77,15 +77,15 @@ document.addEventListener("DOMContentLoaded", () => {
             copyBtn.classList.contains("success") ||
             copyBtn.classList.contains("error");
 
-        if (w < 390) {
+        if (w < 300) {
             if (resetBtn) resetBtn.textContent = "📍";
             if (!isCopyBusy) copyBtn.textContent = "🔗";
             homeBtn.textContent = "🏠";
-        } else if (w < 475) {
+        } else if (w < 350) {
             if (resetBtn) resetBtn.textContent = "重置";
             if (!isCopyBusy) copyBtn.textContent = "連結";
             homeBtn.textContent = "首頁";
-        } else if (w < 600) {
+        } else if (w < 500) {
             if (resetBtn) resetBtn.textContent = "📍 重置";
             if (!isCopyBusy) copyBtn.textContent = "🔗 連結";
             homeBtn.textContent = "🏠 首頁";
