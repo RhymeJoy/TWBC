@@ -1,130 +1,181 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-<head>
-    <!-- HTML Meta Tags -->
-    <title>TWBC</title>
-    <meta name="description" content="">
+    <head>
+        <!-- HTML Meta Tags -->
+        <title>TWBC</title>
+        <meta name="description" content="">
 
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:site_name" content="TWBC">
-    <meta property="og:url" content="">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="">
-    <meta property="og:description" content="">
-    <meta property="og:image" content="">
-    <meta property="og:image:width" content="630">
-    <meta property="og:image:height" content="1200">
+        <!-- preload -->
+        <link rel="preload" href="assets/img/derpy-coding.avif" as="image">
+        <script src="assets/js/derpyload.js"></script>
 
-    <!-- Twitter Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta property="twitter:domain" content="">
-    <meta property="twitter:url" content="">
-    <meta name="twitter:title" content="TWBC">
-    <meta name="twitter:description" content="">
-    <meta name="twitter:image" content="">
+        <!-- Open Graph Meta Tags -->
+        <meta property="og:site_name" content="TWBC">
+        <meta property="og:url" content="">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="">
+        <meta property="og:description" content="">
+        <meta property="og:image" content="">
+        <meta property="og:image:width" content="630">
+        <meta property="og:image:height" content="1200">
 
-    <!-- other -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=10">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+Mono+TC&display=swap" rel="stylesheet">
+        <!-- Twitter Meta Tags -->
+        <meta name="twitter:card" content="summary_large_image">
+        <meta property="twitter:domain" content="">
+        <meta property="twitter:url" content="">
+        <meta name="twitter:title" content="TWBC">
+        <meta name="twitter:description" content="">
+        <meta name="twitter:image" content="">
 
-    <!-- css -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/font.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-    <link rel="stylesheet" href="assets/css/leaflet.css" />
-    <link rel="stylesheet" href="assets/css/leaf.css" />
-    <link rel="stylesheet" href="assets/css/events.css" />
-</head>
+        <!-- other -->
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=10">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+Mono+TC&display=swap" rel="stylesheet">
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const fallbackHTML = `
+                    <img src="assets/img/derpy-fixing.avif" alt="施工中">
+                    <h3>目前還在修整中，請稍後</h3>
+                `;
 
-<body>
-    <div class="bg"></div>
-    <div id="blur"></div>
-    <div class="vine-menu noblur"></div>
-    <div class="vine-img noblur"></div>
+                const templateDone = {
+                faq: true,
+                timetable: false,
+                VenueMap: false,
+                location: true,
+                vendorsMap: false
+                };
 
-    <div class="bookstall-wrap">
-        <section class="paper-view-book active" id="paperViewBook">
-            <div class="paper-sheet">
-                <div class="paper-topbar-book">
-                    <div id="paperTopbar" class="paper-topbar-main"></div>
-                    <div id="paperTabs" class="paper-topbar-tabs"></div>
+                Object.entries(templateDone).forEach(([key, done]) => {
+                    const template = document.getElementById(`book-content-${key}`);
+                    if (!template) return;
+
+                    if (!done) {
+                        template.innerHTML = fallbackHTML;
+                    }
+                });
+            });
+        </script>
+
+        <!-- css -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        <link rel="stylesheet" href="assets/css/font.css" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+        <link rel="stylesheet" href="assets/css/leaflet.css" />
+        <link rel="stylesheet" href="assets/css/leaf.css" />
+        <link rel="stylesheet" href="assets/css/events.css" />
+        <link rel="stylesheet" href="assets/css/timetable.css" />
+    </head>
+
+    <body>
+        <div class="bg"></div>
+        <div id="blur"></div>
+        <div class="vine-menu noblur"></div>
+        <div class="vine-img noblur"></div>
+
+        <div class="bookstall-wrap">
+            <section class="paper-view-book active" id="paperViewBook">
+                <div class="paper-sheet">
+                    <div class="paper-topbar-book">
+                        <div id="paperTopbar" class="paper-topbar-main"></div>
+                        <div id="paperTabs" class="paper-topbar-tabs"></div>
+                    </div>
+
+                    <div class="paper-inner" id="paperInner">
+                        <h3 id="paperTitle"></h3>
+                        <div id="paperBody"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- 書本內容模板 -->
+        <template id="book-content-faq">
+            <h4>這裡是FAQ答題書。或許可以回答你一些簡單的問題。有更進階的問題可以到DC裡面問。
+            </h4>
+            <p>Q：可以更改已購買票種的等級嗎？<br>A：答案。</p>
+            <p>Q：如過購買後發現有其他事情衝突無法去，能否能退款？<br>A：答案。</p>
+            <p>Q：請問徽章的部分是角色隨機發放嗎？<br>A：角色是活動的吉祥物。</p>
+            <p>Q：請問活動識別證上面會印有購票人的名字嗎？<br>A：識別證上有空白區域讓參加者寫上自己的名字或暱稱。</p>
+            <p>Q：吧檯有提供酒精飲料嗎？有哪些飲料或餐食呢？<br>A：答案。</p>
+            <p>Q：有區域可以放布偶收藏品嗎？<br>A：有的～目前有規劃一區會作為展示區使用，可以擺放布偶或收藏品。</p>
+        </template>
+
+        <template id="book-content-timetable">
+            <section class="expo-tt">
+                <div class="expo-tt-header">
+                    <h2>Timetable</h2>
+                    <p>Click / Touch the timetable for details!</p>
+                    <p>Below timetable is not final, and is subject to change.</p>
                 </div>
 
-                <div class="paper-inner" id="paperInner">
-                    <h3 id="paperTitle"></h3>
-                    <div id="paperBody"></div>
+                <div class="expo-tt-shell">
+                    <div class="expo-tt-grid" id="expoTimetable">
+                        <!-- JS 生成 -->
+                    </div>
+                </div>
+            </section>
+
+            <div class="expo-tt-modal" id="expoTtModal" aria-hidden="true">
+                <div class="expo-tt-modal-bg" data-close="true"></div>
+                <div class="expo-tt-modal-box">
+                    <button class="expo-tt-modal-close" id="expoTtModalClose" type="button">×</button>
+                    <div id="expoTtModalBody"></div>
                 </div>
             </div>
-        </section>
-    </div>
+        </template>
 
-    <!-- 書本內容模板 -->
-    <template id="book-content-faq">
-        <h4>這裡是FAQ答題書。或許可以回答你一些簡單的問題。有更進階的問題可以到DC裡面問。
-        </h4>
-        <p>Q：可以更改已購買票種的等級嗎？<br>A：答案。</p>
-        <p>Q：如過購買後發現有其他事情衝突無法去，能否能退款？<br>A：答案。</p>
-        <p>Q：請問徽章的部分是角色隨機發放嗎？<br>A：角色是活動的吉祥物。</p>
-        <p>Q：請問活動識別證上面會印有購票人的名字嗎？<br>A：識別證上有空白區域讓參加者寫上自己的名字或暱稱。</p>
-        <p>Q：吧檯有提供酒精飲料嗎？有哪些飲料或餐食呢？<br>A：答案。</p>
-        <p>Q：有區域可以放布偶收藏品嗎？<br>A：有的～目前有規劃一區會作為展示區使用，可以擺放布偶或收藏品。</p>
-    </template>
+        <template id="book-content-VenueMap">
+            <p>這裡之後可以放場地地圖內容。</p>
+        </template>
 
-    <template id="book-content-timetable">
-        <p>這裡之後可以放 timetable 內容。</p>
-    </template>
+        <template id="book-content-location">
+            <div class="leaflet-wrap">
+                <div id="eventMap" class="leaflet-map"></div>
+            </div>
 
-    <template id="book-content-VenueMap">
-        <p>這裡之後可以放場地地圖內容。</p>
-    </template>
+            <h2>交通方式</h2>
+            
+            <h3>大眾運輸</h3>
+            <div class="box route-trigger box-mrt" data-route="捷運步行路線">
+                <h4>北捷⨠三和國中站 ⪼ 2 號出口</h4>
+                <p>台北捷運的中和新蘆線(黃線)。距離不到100公尺。出站後，步行約2分鐘即可到達活動地點。</p>
+            </div>
+            <div class="box route-trigger box-train" data-route="火車站路線">
+                <h4>台北火車站</h4>
+                <p>適合國內旅客。可先轉搭捷運或客運進入台北市區，再前往三和國中站。</p>
+            </div>
+            <div class="box route-trigger box-bus" data-route="公車站路線">
+                <h4>台北公車捷運三和國中站</h4>
+                <p>適合台北在地人。可搭客運再轉乘前往三和國中站。</p>
+            </div>
 
-    <template id="book-content-location">
-        <div class="leaflet-wrap">
-            <div id="eventMap" class="leaflet-map"></div>
-        </div>
+            <h3>機場</h3>
+            <div class="box route-trigger box-airport1" data-route="桃園機場路線">
+                <h4>桃園國際機場</h4>
+                <p>適合國際旅客。可先搭機場捷運，再轉乘捷運前往三和國中站，或坐客運進入台北市區。</p>
+            </div>
+            <div class="box route-trigger box-airport2" data-route="松山機場路線">
+                <h4>台北松山機場</h4>
+                <p>適合國內線與部分區域航線旅客。可先進入台北捷運系統，再轉乘至三和國中站附近。</p>
+            </div>
+        </template>
 
-        <h2>交通方式</h2>
+        <template id="book-content-vendorsMap">
+            <p>這裡之後可以放入場規則內容。</p>
+        </template>
         
-        <h3>大眾運輸</h3>
-        <div class="box route-trigger box-mrt" data-route="捷運步行路線">
-            <h4>北捷⨠三和國中站 ⪼ 2 號出口</h4>
-            <p>台北捷運的中和新蘆線(黃線)。距離不到100公尺。出站後，步行約2分鐘即可到達活動地點。</p>
-        </div>
-        <div class="box route-trigger box-train" data-route="火車站路線">
-            <h4>台北火車站</h4>
-            <p>適合國內旅客。可先轉搭捷運或客運進入台北市區，再前往三和國中站。</p>
-        </div>
-        <div class="box route-trigger box-bus" data-route="公車站路線">
-            <h4>台北公車捷運三和國中站</h4>
-            <p>適合台北在地人。可搭客運再轉乘前往三和國中站。</p>
-        </div>
-
-        <h3>機場</h3>
-        <div class="box route-trigger box-airport1" data-route="桃園機場路線">
-            <h4>桃園國際機場</h4>
-            <p>適合國際旅客。可先搭機場捷運，再轉乘捷運前往三和國中站，或坐客運進入台北市區。</p>
-        </div>
-        <div class="box route-trigger box-airport2" data-route="松山機場路線">
-            <h4>台北松山機場</h4>
-            <p>適合國內線與部分區域航線旅客。可先進入台北捷運系統，再轉乘至三和國中站附近。</p>
-        </div>
-    </template>
-
-    <template id="book-content-vendorsMap">
-        <p>這裡之後可以放入場規則內容。</p>
-    </template>
-    
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="assets/js/book.js"></script>
-    <script src="assets/js/leaflet.js"></script>
-    <script src="assets/js/topbar-e.js"></script>
-    <script src="assets/js/time-table.js"></script>
-    <script src="assets/js/leaf.js"></script>
-</body>
+        
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <script src="assets/js/book.js"></script>
+        <script src="assets/js/leaflet.js"></script>
+        <script src="assets/js/topbar-e.js"></script>
+        <script src="assets/js/time-table.js"></script>
+        <script src="assets/js/leaf.js"></script>
+    </body>
 </html>
